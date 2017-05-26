@@ -22,9 +22,9 @@ function handleEvent(event) {
   }
 
   return client.replyMessage(event.replyToken, {
-    type: 'text', 
+    type: 'text',
     text: 'test'
   });
 }
 
-app.listen(3000);
+app.listen(3900);
