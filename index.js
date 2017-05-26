@@ -27,9 +27,8 @@ const verify = (rawBody, signature) => {
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/webhook', line.middleware(config), (req, res) => {
-  let signature = crypto.createHmac('sha256', this.options.channelSecret)
-    .update(rawBody, 'utf8')
-    .digest('base64');
+
+  console.log(req.headers)
 
   req.
   Promise
