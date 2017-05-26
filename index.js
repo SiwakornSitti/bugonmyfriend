@@ -1,30 +1,45 @@
-const express = require('express');
-const app = express();
+'use strict';
 
 const line = require('@line/bot-sdk');
-const middleware = require('@line/bot-sdk').middleware
+const express = require('express');
+
+// create LINE SDK config from env variables
 const config = {
   channelAccessToken: 'G6rZSbSUFOTJ+lk+azpu0BEOkyHAeiQzh7wimY6A3hnMuHQLI5Nh27KbddXHeUGguzHCrgX/Ne2wNNh/nEtQxWvO+agZ4NtVoCbEpeSNyd1AMtiKLULvHQwriP2ESjQVwk5ixBJt5zPzfYpO8Xa5IAdB04t89/1O/w1cDnyilFU=',
   channelSecret: 'U85f96c722276f3628ea09598da6153f7'
 };
 
-app.use(middleware(config));
-
-app.post('/webhook', line.middleware(config), (req, res) => res.json(req.body.events) );
-
-app.get('/',(req, res) => res.end('Site Working'));
-
+// create LINE SDK client
 const client = new line.Client(config);
-function handleEvent(event) {
 
+// create Express app
+// about Express itself: https://expressjs.com/
+const app = express();
+
+// register a webhook handler with middleware
+// about the middleware, please refer to doc
+app.post('/webhook', line.middleware(config), (req, res) => {
+  Promise
+    .all(req.body.events.map(handleEvent))
+    .then((result) => res.json(result));
+});
+
+// event handler
+function handleEvent(event) {
   if (event.type !== 'message' || event.message.type !== 'text') {
+    // ignore non-text-message event
     return Promise.resolve(null);
   }
 
-  return client.replyMessage(event.replyToken, {
-    type: 'text',
-    text: 'test'
-  });
+  // create a echoing text message
+  const echo = { type: 'text', text: event.message.text };
+
+  // use reply API
+  return client.replyMessage(event.replyToken, echo);
 }
 
-app.listen(process.env.PORT || 5000)
+// listen on port
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`listening on ${port}`);
+});
