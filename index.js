@@ -22,7 +22,7 @@ function handleEvent(event) {
   }
 
   return client.replyMessage(event.replyToken, {
-    type: 'text',
+    type: 'text', 
     text: 'test'
   });
 }
