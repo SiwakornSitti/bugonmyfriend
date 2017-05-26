@@ -27,4 +27,4 @@ function handleEvent(event) {
   });
 }
 
-app.listen(80);
+app.listen(process.env.PORT || 5000)
