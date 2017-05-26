@@ -13,6 +13,8 @@ app.post('/webhook', line.middleware(config), (req, res) => {
     .then((result) => res.json(result));
 });
 
+app.get('/',(req, res) => res.end('Site Working'));
+
 const client = new line.Client(config);
 function handleEvent(event) {
   if (event.type !== 'message' || event.message.type !== 'text') {
